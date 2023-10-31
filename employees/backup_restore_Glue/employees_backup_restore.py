@@ -14,12 +14,13 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 
+table_name=args['TABLE_DATABASE']
 # Script generated for node PostgreSQL
 PostgreSQL_node1698616615489 = glueContext.create_dynamic_frame.from_options(
     connection_type="postgresql",
     connection_options={
         "useConnectionProperties": "true",
-        "dbtable": "public.jobs",
+        "dbtable": f"public.{table_name}",
         "connectionName": "teste1",
     },
     transformation_ctx="PostgreSQL_node1698616615489",
@@ -52,7 +53,7 @@ PORT = conn['port']
 DATABASE = args['DATABASE']#"postgres"
 URL = conn['url']+"/"+DATABASE
 DRIVER = "org.postgresql.Driver"
-table_name=args['TABLE_DATABASE']
+
 
 spark_df.write \
     .format("jdbc") \
