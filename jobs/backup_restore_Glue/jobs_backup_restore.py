@@ -39,7 +39,8 @@ AmazonS3_node1698617028424 = glueContext.create_dynamic_frame.from_options(
 
 
 # Convert data to a Spark DataFrame
-spark_df = AmazonS3_node1698617028424.toDF().repartition(1).sortWithinPartitions("id",ascending=True)#.sort("id",ascending=True)
+#  we use repartition 1 just because the data is small, this value must be different from 1 to take the benefits from spark is the data is big
+spark_df = AmazonS3_node1698617028424.toDF().repartition(1).sortWithinPartitions("id",ascending=True)
 
 
 conn = glueContext.extract_jdbc_conf("teste1")
@@ -60,22 +61,6 @@ spark_df.write \
     .option("password", PASSWORD) \
     .mode("overwrite") \
     .save()
-
-# You might need to apply additional transformations here if the backup format differs from your database schema
-"""
-# Write data to the RDS database
-table_name='jobs'
-user_name = "postgres"#secret_json["username"]
-password = "12345678"#secret_json["password"]
-spark_df.write \
-    .format("jdbc") \
-    .option("url", "jdbc:postgresql://databasepsql.czrmhtxwh3mw.us-east-2.rds.amazonaws.com:5432/postgres") \
-    .option("dbtable", table_name) \
-    .option("user", user_name) \
-    .option("password", password) \
-    .mode("overwrite") \
-    .save()
-"""
 
 
 job.commit()
