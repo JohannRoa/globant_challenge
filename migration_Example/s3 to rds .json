@@ -1,0 +1,42 @@
+{
+  "name" : "s3 to rds ",
+  "description" : "",
+  "role" : "arn:aws:iam::158795055229:role/service-role/AWSGlueServiceRole-rol",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "glueetl",
+    "scriptLocation" : "s3://aws-glue-assets-158795055229-us-east-2/scripts/job.py",
+    "pythonVersion" : "3"
+  },
+  "defaultArguments" : {
+    "--enable-metrics" : "true",
+    "--enable-spark-ui" : "true",
+    "--spark-event-logs-path" : "s3://aws-glue-assets-158795055229-us-east-2/sparkHistoryLogs/",
+    "--enable-job-insights" : "false",
+    "--enable-glue-datacatalog" : "true",
+    "--enable-continuous-cloudwatch-log" : "true",
+    "--job-bookmark-option" : "job-bookmark-enable",
+    "--job-language" : "python",
+    "--TempDir" : "s3://aws-glue-assets-158795055229-us-east-2/temporary/"
+  },
+  "connections" : {
+    "connections" : [ "teste1" ]
+  },
+  "maxRetries" : 0,
+  "allocatedCapacity" : 10,
+  "timeout" : 2880,
+  "maxCapacity" : 10.0,
+  "glueVersion" : "4.0",
+  "numberOfWorkers" : 10,
+  "workerType" : "G.1X",
+  "executionClass" : "STANDARD",
+  "codeGenConfigurationNodes" : "{\"node-1698535119666\":{\"S3CsvSource\":{\"AdditionalOptions\":{\"EnableSamplePath\":false,\"SamplePath\":\"s3://globant-prueba/RAW_DATA/jobs/jobs.csv\"},\"Escaper\":\"\",\"Exclusions\":[],\"Name\":\"Amazon S3\",\"OptimizePerformance\":false,\"OutputSchemas\":[{\"Columns\":[{\"Name\":\"col0\",\"Type\":\"string\"},{\"Name\":\"col1\",\"Type\":\"string\"}]}],\"Paths\":[\"s3://globant-prueba/RAW_DATA/jobs/\"],\"QuoteChar\":\"quote\",\"Recurse\":true,\"Separator\":\"comma\",\"WithHeader\":false}},\"node-1698593430546\":{\"ApplyMapping\":{\"Inputs\":[\"node-1698535119666\"],\"Mapping\":[{\"Dropped\":false,\"FromPath\":[\"col0\"],\"FromType\":\"string\",\"ToKey\":\"id\",\"ToType\":\"bigint\"},{\"Dropped\":false,\"FromPath\":[\"col1\"],\"FromType\":\"string\",\"ToKey\":\"job\",\"ToType\":\"string\"}],\"Name\":\"Change Schema\"}},\"node-1698535126643\":{\"PostgreSQLCatalogTarget\":{\"Database\":\"jobs_rds\",\"Inputs\":[\"node-1698593430546\"],\"Name\":\"PostgreSQL\",\"Table\":\"postgres_public_jobs\"}}}",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "globant_challenge",
+    "branch" : "main",
+    "folder" : "migration_Example"
+  }
+}
