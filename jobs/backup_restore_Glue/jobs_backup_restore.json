@@ -15,11 +15,14 @@
     "--enable-spark-ui" : "true",
     "--spark-event-logs-path" : "s3://aws-glue-assets-158795055229-us-east-2/sparkHistoryLogs/",
     "--enable-job-insights" : "false",
+    "--DATABASE" : "postgres",
     "--enable-glue-datacatalog" : "true",
     "--enable-continuous-cloudwatch-log" : "true",
     "--job-bookmark-option" : "job-bookmark-disable",
     "--job-language" : "python",
-    "--TempDir" : "s3://aws-glue-assets-158795055229-us-east-2/temporary/"
+    "--TempDir" : "s3://aws-glue-assets-158795055229-us-east-2/temporary/",
+    "--TABLE_DATABASE" : "jobs",
+    "--FILE_RESTORE" : "s3://globant-prueba/BACKUP/jobs/jobs_backup_2023-10-29T21-46-02.avro"
   },
   "maxRetries" : 0,
   "allocatedCapacity" : 10,
