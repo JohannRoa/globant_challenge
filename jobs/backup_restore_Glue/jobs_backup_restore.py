@@ -15,19 +15,8 @@ job = Job(glueContext)
 job.init(args["JOB_NAME"], args)
 table_name=args['TABLE_DATABASE']
 
-# Script generated for node PostgreSQL
-PostgreSQL_node1698616615489 = glueContext.create_dynamic_frame.from_options(
-    connection_type="postgresql",
-    connection_options={
-        "useConnectionProperties": "true",
-        "dbtable": f"public.{table_name}",
-        "connectionName": "teste1",
-    },
-    transformation_ctx="PostgreSQL_node1698616615489",
-)
-
 # Script generated for node Amazon S3
-file_s3url_restoration = args['FILE_RESTORE']#"s3://globant-prueba/BACKUP/jobs/jobs_backup_2023-10-29T21-46-02.avro"
+file_s3url_restoration = args['FILE_RESTORE']
 AmazonS3_node1698617028424 = glueContext.create_dynamic_frame.from_options(
     connection_type="s3",
     format="avro",

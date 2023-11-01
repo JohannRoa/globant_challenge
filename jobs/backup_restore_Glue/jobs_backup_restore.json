@@ -22,7 +22,7 @@
     "--job-language" : "python",
     "--TempDir" : "s3://aws-glue-assets-158795055229-us-east-2/temporary/",
     "--TABLE_DATABASE" : "jobs",
-    "--FILE_RESTORE" : "s3://globant-prueba/BACKUP/jobs/jobs_backup_2023-10-29T21-46-02.avro"
+    "--FILE_RESTORE" : "s3://globant-prueba/BACKUP/jobs/jobs_backup_2023-11-01T04-53-09.avro"
   },
   "maxRetries" : 0,
   "allocatedCapacity" : 10,
