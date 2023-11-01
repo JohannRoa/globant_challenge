@@ -54,7 +54,7 @@ response = client.list_objects_v2(Bucket=BUCKET_NAME,Prefix=PREFIX)
 names = response["Contents"]
 
 #Find out the file which have part-000* in it's Key
-particulars = [name['Key'] for name in names if 'part' in name['Key']]
+particulars = [name['Key'] for name in names if '-part-' in name['Key']]
 
 timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
 for particular in particulars:
