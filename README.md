@@ -42,7 +42,7 @@ logged and all the fields are required.
 
 To solve the problem of delivering data in real time, It is build a pipeline in AWS consisting in 3 services: API Gateway, Lambda and the RDS we have created.
 
-![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/916cbeff-f359-4af2-8cb9-709402a8e456)
+![Architecture (1)](https://github.com/JohannRoa/globant_challenge/assets/32910991/843b1bf3-a78f-4935-ac34-f41fe6e739dd)
 
 First we create an API REST service with 3 resources and a POST method within. Each resource-method will represent the data insertion over each table. 
 
