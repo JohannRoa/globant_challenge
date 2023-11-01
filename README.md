@@ -29,9 +29,10 @@ For the migration of the data, we must follow the next steps:
 4. Create ETL jobs for each table, the source will be an S3, the target will be these tables from the Glue Catalog. The data must be transformed due to the non header behaviour of the CSV data and also the different type of variables over the data. The visual mode of this ETL give us something like this:
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/198b4202-e833-47b6-924c-b1caf0aaf0c9)
 
+      Another important fact is to enable the bookmark in the Glue interface, this will give memory to the jobs to avoid duplicating information. Therefore it will be usefull if we want to run asynchronus jobs that take new s3 files.
       In addition, by using the repository connection of Glue, we can deploy the  ETLs faster. There are 2 files for each ETL, one is the json configuration and the other the python script which uses the spark big data logic to do the process. The migration files are in the migration_history subfolders.
 
-5. Run each ETL, if the configure files are ok, the processes will be successfull and our CSV data is now migrated!
+5. Run each ETL, if the configure files are ok, the processes will be successfull and our CSV data will be migrated!
 
 **Part 2: Create a Rest API service to receive new data.** This service must have:
 - Each new transaction must fit the data dictionary rules.
