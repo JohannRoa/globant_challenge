@@ -6,7 +6,7 @@ from awsglue.context import GlueContext
 from awsglue.dynamicframe import DynamicFrame
 from awsglue.job import Job
 
-args = getResolvedOptions(sys.argv, ["JOB_NAME","CATALOG_DATABASE","CATALOG_TABLE_NAME"])
+args = getResolvedOptions(sys.argv, ["JOB_NAME","CATALOG_DATABASE","CATALOG_TABLE_NAME","RDS_TABLE_NAME"])
 sc = SparkContext()
 glueContext = GlueContext(sc)
 # set custom logging on
@@ -17,6 +17,7 @@ job.init(args["JOB_NAME"], args)
 
 database = args["CATALOG_DATABASE"]
 table_database= args['CATALOG_TABLE_NAME']
+rds_table_name= args['RDS_TABLE_NAME']
 
 # Script generated for node PostgreSQL
 PostgreSQL_node1698597257601 = glueContext.create_dynamic_frame.from_catalog(
@@ -34,7 +35,7 @@ AmazonS3_node1698597325950 = glueContext.write_dynamic_frame.from_options(
     connection_type="s3",
     format="avro",
     connection_options={
-        "path": "s3://globant-prueba/BACKUP/jobs/",
+        "path": f"s3://globant-prueba/BACKUP/{rds_table_name}/",
         "partitionKeys": [],
     },
     transformation_ctx="AmazonS3_node1698597325950",
@@ -46,7 +47,7 @@ from datetime import datetime
 client = boto3.client('s3')
 s3_resource = boto3.resource('s3')
 BUCKET_NAME= 'globant-prueba'
-PREFIX ='BACKUP/jobs/'
+PREFIX =f'BACKUP/{rds_table_name}/'
 
 #getting all the content/file inside the bucket. 
 response = client.list_objects_v2(Bucket=BUCKET_NAME,Prefix=PREFIX)
@@ -61,7 +62,7 @@ for particular in particulars:
         'Bucket': BUCKET_NAME,
         'Key': particular
     }
-    s3_resource.meta.client.copy(copy_source, BUCKET_NAME, PREFIX+f"jobs_backup_{timestamp}.avro")
+    s3_resource.meta.client.copy(copy_source, BUCKET_NAME, PREFIX+f"{rds_table_name}_backup_{timestamp}.avro")
     client.delete_object(Bucket=BUCKET_NAME, Key=particular)
 
 job.commit()

@@ -21,7 +21,8 @@
     "--job-language" : "python",
     "--TempDir" : "s3://aws-glue-assets-158795055229-us-east-2/temporary/",
     "--CATALOG_DATABASE": "rds_postgres",
-    "--CATALOG_TABLE_NAME":"postgres_public_employees"
+    "--CATALOG_TABLE_NAME":"postgres_public_employees",
+    "--RDS_TABLE_NAME":"employees"
   },
   "connections" : {
     "connections" : [ "teste1" ]
