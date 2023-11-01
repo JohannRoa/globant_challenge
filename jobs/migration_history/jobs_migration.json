@@ -19,7 +19,9 @@
     "--enable-continuous-cloudwatch-log" : "true",
     "--job-bookmark-option" : "job-bookmark-enable",
     "--job-language" : "python",
-    "--TempDir" : "s3://aws-glue-assets-158795055229-us-east-2/temporary/"
+    "--TempDir" : "s3://aws-glue-assets-158795055229-us-east-2/temporary/",
+    "--CATALOG_DATABASE": "rds_postgres",
+    "--CATALOG_TABLE_NAME":"postgres_public_jobs"
   },
   "connections" : {
     "connections" : [ "teste1" ]
