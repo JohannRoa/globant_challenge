@@ -32,7 +32,6 @@
   "numberOfWorkers" : 10,
   "workerType" : "G.1X",
   "executionClass" : "STANDARD",
-  "codeGenConfigurationNodes" : "{\"node-1698535119666\":{\"S3CsvSource\":{\"AdditionalOptions\":{\"EnableSamplePath\":false,\"SamplePath\":\"s3://globant-prueba/RAW_DATA/jobs/jobs.csv\"},\"Escaper\":\"\",\"Exclusions\":[],\"Name\":\"Amazon S3\",\"OptimizePerformance\":false,\"OutputSchemas\":[{\"Columns\":[{\"Name\":\"col0\",\"Type\":\"string\"},{\"Name\":\"col1\",\"Type\":\"string\"}]}],\"Paths\":[\"s3://globant-prueba/RAW_DATA/jobs/\"],\"QuoteChar\":\"quote\",\"Recurse\":true,\"Separator\":\"comma\",\"WithHeader\":false}},\"node-1698593430546\":{\"ApplyMapping\":{\"Inputs\":[\"node-1698535119666\"],\"Mapping\":[{\"Dropped\":false,\"FromPath\":[\"col0\"],\"FromType\":\"string\",\"ToKey\":\"id\",\"ToType\":\"bigint\"},{\"Dropped\":false,\"FromPath\":[\"col1\"],\"FromType\":\"string\",\"ToKey\":\"job\",\"ToType\":\"string\"}],\"Name\":\"Change Schema\"}},\"node-1698535126643\":{\"PostgreSQLCatalogTarget\":{\"Database\":\"rds_postgres\",\"Inputs\":[\"node-1698593430546\"],\"Name\":\"PostgreSQL\",\"Table\":\"postgres_public_jobs\"}}}",
   "sourceControlDetails" : {
     "provider" : "GITHUB",
     "repository" : "globant_challenge",
