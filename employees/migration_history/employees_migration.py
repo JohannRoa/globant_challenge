@@ -32,7 +32,7 @@ AmazonS3_node1698535119666 = glueContext.create_dynamic_frame.from_options(
 # Script generated for node Change Schema
 ChangeSchema_node1698593430546 = ApplyMapping.apply(
     frame=AmazonS3_node1698535119666,
-    mappings=[("col0", "string", "id", "bigint"), ("col1", "string", "name", "string"),("col2", "string", "datetime", "string"),("col3", "string", "department_id", "bigint"),("col4", "string", "job_id", "bigint")],
+    mappings=[("col0", "string", "id", "bigint"), ("col1", "string", "name", "string"),("col2", "string", "datetime", "timestamp"),("col3", "string", "department_id", "bigint"),("col4", "string", "job_id", "bigint")],
     transformation_ctx="ChangeSchema_node1698593430546",
 )
 
