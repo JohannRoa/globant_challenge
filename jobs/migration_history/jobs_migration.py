@@ -5,7 +5,7 @@ from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
 
-args = getResolvedOptions(sys.argv, ["JOB_NAME"],["CATALOG_DATABASE"],["CATALOG_TABLE_NAME"])
+args = getResolvedOptions(sys.argv, ["JOB_NAME","CATALOG_DATABASE","CATALOG_TABLE_NAME"])
 sc = SparkContext()
 glueContext = GlueContext(sc)
 spark = glueContext.spark_session
