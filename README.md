@@ -62,7 +62,7 @@ The Api Key is generated using the tool of API Key and we associate to this API 
 
 Finally this API Rest was built with the following base_url: *https://5qw4kk70ke.execute-api.us-east-2.amazonaws.com/v1*, each path has a throttling rate of 10000 requests per second with a burst of 5000 requests.
 
-For the insert part, we have developed a lambda function named *InsertTables*. The function is built with python3.8 and a layer with the psycopg2 module (the .zip of the module is in root folder), which allow us to connect and performs inserts on the RDS. Addtionaly, the lambda is configured with 15 minute of timeout, 2GB of memory and 500MB of ephemeral memory. Without a doubt, this lambda will process batch transactions up to 1000 for earch request.
+For the insert part, we have developed a lambda function named *InsertTables*. The function is built with python3.8 and a layer with the psycopg2 module (the .zip of the module is in root folder), which allow us to connect and performs inserts on the RDS. Addtionaly, the lambda is configured with 15 minute of timeout, 2GB of memory and 500MB of ephemeral memory. Without a doubt, this lambda will process batch transactions up to 1000 for earch request. On other hand, the lambda must be configured to work in the same VPC from the RDS.
 
 The lambda was deployed 3 times, one per table code configuration (the scripts of the lambdas are stored in the folders). The three versions are associated with one alias which distinguished them.
 
