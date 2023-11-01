@@ -27,11 +27,15 @@ AmazonS3_node1698617028424 = glueContext.create_dynamic_frame.from_options(
     },
     transformation_ctx="AmazonS3_node1698617028424",
 )
-
+ChangeSchema_node1698593430546 = ApplyMapping.apply(
+    frame=AmazonS3_node1698617028424,
+     mappings=[("id", "int", "id", "bigint"), ("job", "string", "job", "string")],
+    transformation_ctx="ChangeSchema_node1698593430546",
+)
 
 # Convert data to a Spark DataFrame
 #  we use repartition 1 just because the data is small, this value must be different from 1 to take the benefits from spark is the data is big
-spark_df = AmazonS3_node1698617028424.toDF().repartition(1).sortWithinPartitions("id",ascending=True)
+spark_df = ChangeSchema_node1698593430546.toDF().repartition(1).sortWithinPartitions("id",ascending=True)
 
 
 conn = glueContext.extract_jdbc_conf("teste1")
@@ -46,6 +50,7 @@ DRIVER = "org.postgresql.Driver"
 
 spark_df.write \
     .format("jdbc") \
+    .option("truncate","true") \
     .option("url", URL) \
     .option("dbtable", table_name) \
     .option("user", USERNAME) \
