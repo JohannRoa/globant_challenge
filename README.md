@@ -1,79 +1,89 @@
 # Globant Challenge
-For this challenge, all the scripts and files used will be stored in folders named by the entities of the database. So every solution code for each table can be found in the folders.
+
+This README.md follows the steps to develop the required project described in the file "coding_challengeGlobant.pdf"
+In this challenge, all scripts and files are organized into folders named after the entities in the database. This structure makes it easy to locate the solution code for each table.
+
 ## Challenge #1
-**Part 1: Move historic data from files in CSV format to the new database**
 
-Due to big data problem, the first task of migrating the data from csv will be solved by using AWS Glue. It is supposed that our data is stored in an S3. Probably the source could be an SFTP server, another database, an API, another cloud storage like GCP or even a webpage. However by doing all the extraction we can stored it in an s3 Bucket.
+### Part 1: Move historic data from files in CSV format to the new database
 
-Due to the above, we are going to create Glue ETL jobs which load the CSV data from S3 to a new database,which will be created using RDS.
+To address the challenge of migrating data from CSV files to the new database, we employ AWS Glue. The source data is assumed to be stored in an S3 bucket, although it could come from various sources such as an SFTP server, another database, an API, another cloud storage service like GCP, or even a webpage. Regardless of the source, we extract the data and store it in an S3 bucket.
 
-The RDS is created using Postgres 11 within a VPC (public, but only mi ip is whitelisted to prevent SQL injections):
+The migration process involves creating Glue ETL jobs that load CSV data from S3 into a new database created using RDS (Relational Database Service). This RDS instance uses Postgres 11 and resides within a VPC (Virtual Private Cloud), which is public but only allows whitelisted IP addresses to prevent SQL injections. The RDS instance is accessible at the following hostname: `databasepsql.czrmhtxwh3mw.us-east-2.rds.amazonaws.com`.
 
-hostname: *databasepsql.czrmhtxwh3mw.us-east-2.rds.amazonaws.com*
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/86b897e5-5e5c-4f76-b2c7-6d524efa9601)
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/dafd7795-8c0d-4ca1-8d24-ab7ba3c48ce6)
 
-Now that our RDS is online, we can connect to it and create the tables within. The queries for the tables creation are stored in the SQL file at root. The database diagram will look like the image below:
+Now that the RDS is online, we can connect to it and create the necessary tables. The SQL queries for table creation are stored in an SQL file located at the root of this project. The database schema is visualized in the image below:
 ![database_squeme](https://github.com/JohannRoa/globant_challenge/assets/32910991/ebf99bac-60d4-4134-b444-1d7d6ab9661d)
 
 
-For the migration of the data, we must follow the next steps:
+To migrate the data, follow these steps:
 
-1. Create an endpoint on the VPC (which RDS uses) service that allows the service "com.amazonaws.us-east-2.s3" in gateway
+1. Create a VPC endpoint to allow the "com.amazonaws.us-east-2.s3" service to communicate with the RDS instance, which it uses as a gateway.
+
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/7e005ae6-0e32-4fc1-8faa-c33f398ed43c)
-2. Create a Glue connection by taking into account the credentials generated in RDS and selecting one subnet from the VPC
+
+2. Establish a Glue connection, taking into account the credentials generated in RDS, and select a subnet from the VPC.
+
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/76e053e2-fdee-4844-91cb-17ab5d6fbcba)
-3. Make a Glue crawler which uses the connection from above to generate (run the crawler after its creation) a Glue Catalog over the 3 tables of the RDS
+
+3.Create a Glue Crawler, which uses the previously established connection to generate a Glue Catalog for the three tables in the RDS. Be sure to run the crawler after its creation.
+
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/45481041-9e62-408b-b48b-5d6e4260b346)
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/4d0f919b-3b63-4cab-b979-95b68eedfc70)
-4. Create ETL jobs for each table, the source will be an S3, the target will be these tables from the Glue Catalog. The data must be transformed due to the non header behaviour of the CSV data and also the different type of variables over the data. The visual mode of this ETL give us something like this:
+
+4. Develop ETL jobs for each table. The source will be an S3 bucket, and the target will be the tables from the Glue Catalog. The data must undergo transformations due to the non-header behavior of the CSV data and the variation in data types. The visual representation of this ETL might resemble the following:
+
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/198b4202-e833-47b6-924c-b1caf0aaf0c9)
 
-      Another important fact is to enable the bookmark in the Glue interface, this will give memory to the jobs to avoid duplicating information. Therefore it will be usefull if we want to run asynchronus jobs that take new s3 files.
-      In addition, by using the repository connection of Glue, we can deploy the  ETLs faster. There are 2 files for each ETL, one is the json configuration and the other the python script which uses the spark big data logic to do the process. The migration files are in the migration_history subfolders.
+An important feature to enable is the bookmark in the Glue interface, which provides memory to the jobs to avoid duplicating information. This is particularly useful when running asynchronous jobs that process new S3 files. Additionally, Glue's repository connection allows for faster deployment of ETLs. Each ETL consists of two files: a JSON configuration file and a Python script using Spark for processing the data. The migration files are stored in the "migration_history" subfolders.
 
-5. Run each ETL, if the configure files are ok, the processes will be successfull and our CSV data will be migrated!
+5. Execute each ETL job. If the configuration files are correct, the processes will be successful, and your CSV data will be successfully migrated!
 
-**Part 2: Create a Rest API service to receive new data.** This service must have:
-- Each new transaction must fit the data dictionary rules.
-- Be able to insert batch transactions (1 up to 1000 rows) with one request.
-- Receive the data for each table in the same service.
-- Keep in mind the data rules for each table: Transactions that don't accomplish the rules must not be inserted but they must be
-logged and all the fields are required.
+### Part 2: Create a REST API Service to Receive New Data
 
-To solve the problem of delivering data in real time, It is build a pipeline in AWS consisting in 3 services: API Gateway, Lambda and the RDS we have created.
+The REST API service created for this challenge must meet the following criteria:
+- Each new transaction must adhere to the data dictionary rules.
+- It should support batch transactions, allowing the insertion of 1 to 1000 rows with a single request.
+- The service should accept data for each table within the same service.
+- Data validation rules for each table must be enforced, and transactions that do not meet these rules should not be inserted, but they should be logged. All fields are required.
+
+To achieve real-time data delivery, an AWS pipeline is constructed, consisting of three services: API Gateway, Lambda, and the previously created RDS.
 
 ![Architecture (1)](https://github.com/JohannRoa/globant_challenge/assets/32910991/843b1bf3-a78f-4935-ac34-f41fe6e739dd)
 
-First we create an API REST service with 3 resources and a POST method within. Each resource-method will represent the data insertion over each table. 
+The initial step involves creating a REST API service with three resources and a POST method for each. Each resource-method represents data insertion for a specific table.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/d50c9908-6691-4071-9592-0e63cbd02915)
 
-In the POST method configuration we must specify the following parameters in the integration request:
+In the POST method configuration, specific parameters must be set in the integration request:
+
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/d2fe7c3d-e582-4f90-8043-57ca828cb43c)
 
-The above will connect the POST requests of the path to to invoke a lambda function, also is is imporant to enable the checkmark *Use Lambda Proxy integration* for controling responses in the lambda function.
-Furthermore, we have used x-api-key as authentication for the API, so we set the value API Key Required for True in the Method requests configuration for all tables.
+This setup links POST requests to invoke a Lambda function. It's important to enable the "Use Lambda Proxy Integration" option to control responses in the Lambda function. Authentication for the API is implemented using x-api-key, and "API Key Required" is set to true in the Method requests configuration for all tables.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/4b12b7e0-e74d-4025-b0f1-913b73d537cd)
 
-The Api Key is generated using the tool of API Key and we associate to this API by the Usage Plans
+API keys are generated using the API Key tool and associated with this API through Usage Plans.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/9f9e77aa-25b1-4e97-838e-1c3dad7a5ff2)
 
-Finally this API Rest was built with the following base_url: *https://5qw4kk70ke.execute-api.us-east-2.amazonaws.com/v1*, each path has a throttling rate of 10000 requests per second with a burst of 5000 requests.
+Finally, the REST API is accessible at the following base URL: `https://5qw4kk70ke.execute-api.us-east-2.amazonaws.com/v1`. Each path has a throttling rate of 10,000 requests per second with a burst of 5,000 requests.
 
-For the insert part, we have developed a lambda function named *InsertTables*. The function is built with python3.8 and a layer with the psycopg2 module (the .zip of the module is in root folder), which allow us to connect and performs inserts on the RDS. Addtionaly, the lambda is configured with 15 minute of timeout, 2GB of memory and 500MB of ephemeral memory. Without a doubt, this lambda will process batch transactions up to 1000 for earch request. On other hand, the lambda must be configured to work in the same VPC from the RDS.
+For data insertion, a Lambda function named "InsertTables" is developed. This function is built with Python 3.8 and utilizes a layer with the psycopg2 module (the .zip of the module is located in the root folder). This module allows the Lambda to connect to the RDS and perform inserts. The Lambda is configured with a timeout of 15 minutes, 2GB of memory, and 500MB of ephemeral memory. It can process batch transactions of up to 1,000 rows in a single request. Additionally, the Lambda must be configured to work within the same VPC as the RDS.
 
-The lambda was deployed 3 times, one per table code configuration (the scripts of the lambdas are stored in the folders). The three versions are associated with one alias which distinguished them.
+The Lambda function is deployed three times, one for each table's code configuration, and the scripts for these Lambdas are stored in the respective folders. These three versions are associated with a distinct alias for differentiation.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/949529e3-03f5-4eff-a45f-e84431b0c30a)
 
-Therefore, the body of the request must respect the data rules of the dictionary ("json"), the lambda code will control bad inputs from users and return 400 responses if needed. However, if the transactions meet the minimum requeriments the transactions can proceed, bad transactions will be logged in the success status response. For example:
+The request body must adhere to the data rules defined in the data dictionary (JSON). The Lambda code will validate input data from users and return a 400 response for invalid body type or duplicated id. If the transactions meet the minimum requirements, they will be processed, valid transactions will be inserted and invalid transactions will be logged in the success status response.
+
+For example:
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/9cbcae72-43c1-461f-8414-50d2759f5fd3)
 
-A cURL example for the department resource is below:
+A cURL example for the "department" resource is provided below. This request will fail if an "id" of 1 already exists in the "job" table. However, if not, the Lambda will process the transactions, inserting the first one, while the remaining invalid transactions will be included in the error response.
 
 ```
 curl --location 'https://5qw4kk70ke.execute-api.us-east-2.amazonaws.com/v1/jobs' \
@@ -108,50 +118,50 @@ curl --location 'https://5qw4kk70ke.execute-api.us-east-2.amazonaws.com/v1/jobs'
     ]
 '
 ```
- This request will fail if there is an id of 1 in the job table, However, if not, it will process the transactions and insert the first one. The remaining will be printed with the error as another field.
 
-**Part 3: Create a feature to backup for each table and save it in the file system in AVRO format**
+### Part 3: Create a Feature for Backup of Each Table in AVRO Format
 
-For this task, we will use again Glue, it is a powerfull tool for processing big data, also it facilitates the export of AVRO format. Thus, we are creating 3 ETLS to export each table. Also we can schedule each ETL to make a backup each month, so we stored it in S3. In this way, the ETL should be built with the database catalog of our RDS as origin source. Also this origin can be built with our glue connection of JDBC too. Thus, the target or destiny will be  S3, and we can configure format output options as AVRO. 
+To address the backup feature, we again turn to AWS Glue, a powerful tool for processing big data and facilitating data export in AVRO format. We create three ETLs to export each table. These ETLs can be scheduled to run periodically to create backups, which are stored in S3. The ETLs are designed to use the database catalog from our RDS as the source. Additionally, the source can be built using the Glue JDBC connection.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/be0bf656-b3c0-40b4-97ac-2bae0d095af3)
 
-The pair of scripts for each ETL are stored in the subfolder *backup*. Furthermore, these scripts reduce the number of repartitions to one due to the writing of just one file. When working with big data is not a good practice to work with 1 repartition, however, for this test little case we make the exception. 
-
-The resulting AVRO files are stored in each folder due to the small size of them.
+The destination or target for these ETLs is S3, and we configure the output format as AVRO.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/b50d6d7b-90e1-476e-83ac-956e50fca8b8)
 
-**Part4: Create a feature to restore a certain table with its backup**
+For simplicity, the scripts for each ETL are stored in the "backup" subfolders. These scripts limit the number of repartitions to one, although working with a single repartition is generally discouraged for big data. However, for this small-scale project, this approach is acceptable.
 
-Finally, for the restoration process we use Glue too. On the other hand, now the  source will be the S3 file and the destination will be the tables from the glue catalog associated with the RDS. Fortuntely Glue reads for us the AVRO file and make all the transformations (variable mapping for columns) for uploading them in the RDS. The scripts which helps these processes are stored in the subfolder *backup_restore_Glue*.
+The resulting AVRO files are stored in this repository in their respective folders due to their small file size.
+
+### Part 4: Create a Feature to Restore a Specific Table from Its Backup
+
+For the restoration process, we again rely on AWS Glue. The source is now the AVRO file stored in S3, and the destination is the tables within the Glue catalog associated with the RDS. Glue automatically reads the AVRO file and handles all necessary transformations, including mapping columns, for uploading the data to the RDS. The scripts that facilitate these processes are stored in the "backup_restore_Glue" subfolder.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/cbecfebf-4045-4d2e-85b7-68e2684d48ef)
 
-
-For demonstrating the restore ETL procedure, all tables were truncated before running the jobs. Now the tables were repopulated, the procedure was sucessfull!
+To demonstrate the restore ETL procedure, all tables were truncated before running the jobs. After the jobs were executed, the tables were successfully repopulated, indicating a successful restoration process.
 
 ## Challenge #2
 
-For this data analysis task we will make some queries over the database we created in the first challenge. The queries are stored in the folder *Challenge2*
+For the data analysis task, we will run various queries on the database created in the first challenge. The queries are located in the "Challenge2" folder.
 
-Checking the distribution of the total employees grouped by department_id and year, we can check thar there are some department_ids that does not match the department_id table. These values for those strange deparments seems to be outliers. However, making the joins over the shared keys will drop out all these outliers we saw (because these are inner joins). Similarly, this pattern is shown by the job_id.
+Analyzing the distribution of total employees grouped by "department_id" and year, we observe that some "department_ids" do not match the values in the "department_id" table. These anomalies appear to be outliers. However, when performing inner joins on shared keys, these outliers are removed from the results. A similar pattern is observed with "job_id."
+
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/9a7852ab-b406-4309-bae1-e6a6e294e5f9)
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/5044f2bd-69bb-41d4-b4e6-e6e7b92a820e)
 
 
-The first query determines the number of employees hired for each job and department in 2021 divided by quarter. A closer look at the first department and job arranged alphabetically should look like this:
+The first query calculates the number of employees hired for each job and department in 2021, divided by quarter. A sample result for the first department and job arranged alphabetically is shown below:
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/62d63738-cd1f-4550-ad7b-7daccf6ec68a)
 
-
-The second query give us a ist of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments. The result is shown below:
+The second query provides a list of department IDs, names, and the number of employees hired by each department, comparing it to the mean number of employees hired in 2021 for all departments. The results are presented as follows:
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/1d2955ce-ebea-4f94-9598-638ee42befed)
 
-the data from this pair of queries is exported to csv in the folder.
+Data from these queries are exported to CSV files located in the designated folder.
 
-To better understand this results, we have developed a juypyter notebook to make some plots of this previous data. Refer to *plots.ipynb* to extend over this data analysis and exploration.
+For a more in-depth understanding of these results, a Jupyter notebook is available for generating plots and conducting further data analysis and exploration. Refer to the "plots.ipynb" for an extended analysis of the data.
 
 
 
