@@ -131,6 +131,28 @@ Finally, for the restoration process we use Glue too. On the other hand, now the
 
 For demonstrating the restore ETL procedure, all tables were truncated before running the jobs. Now the tables were repopulated, the procedure was sucessfull!
 
+## Challenge #2
+
+For this data analysis task we will make some queries over the database we created in the first challenge. The queries are stored in the folder *Challenge2*
+
+Checking the distribution of the total employees grouped by department_id and year, we can check thar there are some department_ids that does not match the department_id table. These values for those strange deparments seems to be outliers. However, making the joins over the shared keys will drop out all these outliers we saw (because these are inner joins). Similarly, this pattern is shown by the job_id.
+![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/9a7852ab-b406-4309-bae1-e6a6e294e5f9)
+![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/5044f2bd-69bb-41d4-b4e6-e6e7b92a820e)
+
+
+The first query determines the number of employees hired for each job and department in 2021 divided by quarter. A closer look at the first department and job arranged alphabetically should look like this:
+
+![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/62d63738-cd1f-4550-ad7b-7daccf6ec68a)
+
+Shown as a heatmap, it looks like:
+
+
+
+The second query give us a ist of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments. The result is shown below:
+
+![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/1d2955ce-ebea-4f94-9598-638ee42befed)
+
+As barplot
 
 
 
