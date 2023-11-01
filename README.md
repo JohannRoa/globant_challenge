@@ -123,7 +123,7 @@ The resulting AVRO files are stored in each folder due to the small size of them
 
 **Part4: Create a feature to restore a certain table with its backup**
 
-Finally, for the restoration process we use Glue too. On the other hand, now the  source will be the S3 file and the destination will be the tables from the glue catalog associated with the RDS. Fortuntely Glue reads for us the AVRO file and make all the transformations for uploading them in the RDS. The scripts which helps these processes are stored in the subfolder *backup_restore_Glue*.
+Finally, for the restoration process we use Glue too. On the other hand, now the  source will be the S3 file and the destination will be the tables from the glue catalog associated with the RDS. Fortuntely Glue reads for us the AVRO file and make all the transformations (variable mapping for columns) for uploading them in the RDS. The scripts which helps these processes are stored in the subfolder *backup_restore_Glue*.
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/cbecfebf-4045-4d2e-85b7-68e2684d48ef)
 
