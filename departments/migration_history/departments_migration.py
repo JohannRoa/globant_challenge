@@ -23,7 +23,7 @@ AmazonS3_node1698535119666 = glueContext.create_dynamic_frame.from_options(
     connection_type="s3",
     format="csv",
     connection_options={
-        "paths": ["s3://globant-prueba/RAW_DATA/jobs/"],
+        "paths": ["s3://globant-prueba/RAW_DATA/departments/"],
         "recurse": True,
     },
     transformation_ctx="AmazonS3_node1698535119666",
