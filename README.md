@@ -144,15 +144,15 @@ The first query determines the number of employees hired for each job and depart
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/62d63738-cd1f-4550-ad7b-7daccf6ec68a)
 
-Shown as a heatmap, it looks like:
-
-
 
 The second query give us a ist of ids, name and number of employees hired of each department that hired more employees than the mean of employees hired in 2021 for all the departments. The result is shown below:
 
 ![image](https://github.com/JohannRoa/globant_challenge/assets/32910991/1d2955ce-ebea-4f94-9598-638ee42befed)
 
-As barplot
+the data from this pair of queries is exported to csv in the folder.
+
+To better understand this results, we have developed a juypyter notebook to make some plots of this previous data. Refer to *plots.ipynb* to extend over this data analysis and exploration.
+
 
 
 
