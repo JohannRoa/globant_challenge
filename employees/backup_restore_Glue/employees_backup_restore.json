@@ -24,6 +24,9 @@
     "--TABLE_DATABASE" : "employees",
     "--FILE_RESTORE" : "s3://globant-prueba/BACKUP/employees/employees_backup_2023-11-01T04-44-55.avro"
   },
+  "connections" : {
+    "connections" : [ "teste1" ]
+  },
   "maxRetries" : 0,
   "allocatedCapacity" : 10,
   "timeout" : 2880,
