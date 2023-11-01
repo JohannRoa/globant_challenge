@@ -24,6 +24,9 @@
     "--TABLE_DATABASE" : "departments",
     "--FILE_RESTORE" : "s3://globant-prueba/BACKUP/departments/departments_backup_2023-11-01T05-04-34.avro"
   },
+  "connections" : {
+    "connections" : [ "teste1" ]
+  },
   "maxRetries" : 0,
   "allocatedCapacity" : 10,
   "timeout" : 2880,
